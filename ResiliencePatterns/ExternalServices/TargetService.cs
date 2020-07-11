@@ -6,7 +6,7 @@ namespace ResiliencePatterns.ExternalServices
 {
     public interface ITargetService
     {
-        Task<ResponseModel> CallTargetService(ERequestType requestType);
+        Task<HttpResponseMessage> CallTargetService(ERequestType requestType);
     }
     public class TargetService : ITargetService
     {
@@ -16,10 +16,10 @@ namespace ResiliencePatterns.ExternalServices
             _httpClient = httpClient;
         }
 
-        public async Task<ResponseModel> CallTargetService(ERequestType requestType)
+        public async Task<HttpResponseMessage> CallTargetService(ERequestType requestType)
         {
-            var result = await _httpClient.GetStringAsync($"/?type={(int)requestType}");
-            return JsonSerializer.Deserialize<ResponseModel>(result, new JsonSerializerOptions(){PropertyNameCaseInsensitive = true});
+            return await _httpClient.GetAsync($"/?type={(int)requestType}");
+            // return JsonSerializer.Deserialize<ResponseModel>(result, new JsonSerializerOptions(){PropertyNameCaseInsensitive = true});
         }
     }
 }
